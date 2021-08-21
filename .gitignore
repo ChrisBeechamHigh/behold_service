@@ -1,0 +1,7 @@
+venv
+.idea
+python/app/__pycache__
+python/app/files
+python/app/analysis/course
+python/app/env_props.py
+*.pyc
