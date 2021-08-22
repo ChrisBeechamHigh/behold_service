@@ -40,12 +40,12 @@ torchserve.exe --start --ncs --model-store model_store --models resnet-18-custom
 Security measures
 =================
 
-
+Look at e.g. using HTTPS for communication between client and service, using WSGI Server or secure load balancer
 
 Application performance
 ========================
 
-In AWS can configure GPU type and number of GPUs for improved throughput
+In AWS can configure GPU type and number of GPUs for improved throughput. Also can configure larger AWS instance type
 
 See documentation below about number_of_gpu setting, number_of_gpu should usually match number of assigned
 
