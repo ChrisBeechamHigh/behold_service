@@ -5,6 +5,7 @@ import time
 from ts.torch_handler.image_classifier import ImageClassifier
 from torchvision import transforms
 
+
 class CustomImageHandler(ImageClassifier):
 
     # transforms taken from ImageClassifier with ColorJitter and Pad added
@@ -19,17 +20,6 @@ class CustomImageHandler(ImageClassifier):
     ])
 
     def inference(self, data, *args, **kwargs):
-        """
-        The Inference Function is used to make a prediction call on the given input request.
-        The user needs to override the inference function to customize it.
-
-        Args:
-            data (Torch Tensor): A Torch Tensor is passed to make the Inference Request.
-            The shape should match the model input shape.
-
-        Returns:
-            Torch Tensor : The Predicted Torch Tensor is returned in this function.
-        """
 
         #below is taken from BaseHandler with logging added
         inference_start = time.time()
@@ -38,7 +28,6 @@ class CustomImageHandler(ImageClassifier):
             results = self.model(marshalled_data, *args, **kwargs)
 
         postprocess_start = time.time()
-        logging.info("some custom logging!")
         logging.info("inference time: %.2f", (postprocess_start - inference_start) * 1000)
         return results
 
@@ -46,7 +35,6 @@ class CustomImageHandler(ImageClassifier):
     def postprocess(self, data):
         results = super().postprocess(data)
 
-        logging.info("here be some results")
         logging.info(results)
         top_three_results = get_top_three_results(results)
         output_results_to_logs(top_three_results)
@@ -54,7 +42,6 @@ class CustomImageHandler(ImageClassifier):
         return results
 
     def handle(self, data, context):
-        # need to do some funky stuff here if balloon predicted
         first_output = super().handle(data, context)
 
         # check if balloon predicted if so need to pass different model
@@ -62,16 +49,13 @@ class CustomImageHandler(ImageClassifier):
         first_output_list = get_list_from_results(first_output)
         prediction_to_check = "balloon"
         if contains_specific_prediction(first_output_list, prediction_to_check):
-            # TODO split below into separate function
+            # TODO split below into separate function e.g. reinitialize with new model
             # TODO we need to define this as a different model
             context.manifest["model"]["modelFile"] = "model.py"
-            # reinitialize with new model
             super().initialize(context)
             second_output = super().handle(data, context)
             second_output_dict = second_output[0]
             second_output_list = get_list_from_results(second_output)
-            # TODO spec says return a True/False if both models predicted same. Check requirements as to whether predictions should also be returned
-            logging.info(type(second_output_dict))
             second_output_dict["same_prediction"] = str(contains_specific_prediction(second_output_list, prediction_to_check))
             return second_output
         else:

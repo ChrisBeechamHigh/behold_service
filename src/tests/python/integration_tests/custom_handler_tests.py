@@ -15,6 +15,6 @@ files = {'data': open('files/dog.jpg','rb')}
 resp = requests.post(url, files=files)
 
 data = resp.json()
-# TODO investigate why with the custom handler, prediction for our dog is window svreen
+# TODO investigate why with the custom handler, prediction for our dog is window screen
 assert('German_shepherd' not in data.keys())
 assert('window_screen' in data.keys())
