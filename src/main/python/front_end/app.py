@@ -4,9 +4,10 @@ import json
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    #TODO render returned JSON
+    # TODO render returned JSON in prettier way
     return render_template('image_poster.html')
 
 
