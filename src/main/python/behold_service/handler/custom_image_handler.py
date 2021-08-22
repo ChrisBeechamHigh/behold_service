@@ -18,7 +18,6 @@ class CustomImageHandler(ImageClassifier):
                              std=[0.229, 0.224, 0.225])
     ])
 
-
     def inference(self, data, *args, **kwargs):
         """
         The Inference Function is used to make a prediction call on the given input request.
@@ -43,6 +42,7 @@ class CustomImageHandler(ImageClassifier):
         logging.info("inference time: %.2f", (postprocess_start - inference_start) * 1000)
         return results
 
+
     def postprocess(self, data):
         results = super().postprocess(data)
 
@@ -62,7 +62,7 @@ class CustomImageHandler(ImageClassifier):
         first_output_list = get_list_from_results(first_output)
         prediction_to_check = "balloon"
         if contains_specific_prediction(first_output_list, prediction_to_check):
-
+            # TODO split below into separate function
             # TODO we need to define this as a different model
             context.manifest["model"]["modelFile"] = "model.py"
             # reinitialize with new model
